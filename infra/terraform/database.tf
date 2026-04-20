@@ -10,12 +10,9 @@ resource "tencentcloud_postgresql_instance" "main" {
   engine_version    = "15.14"
   root_password     = var.db_password
   storage           = var.db_storage
+  memory            = 2 # 2GB
   charset           = "UTF8"
   security_groups   = [tencentcloud_security_group.db.id]
-
-  # 按量付费单节点，不需要 db_node_set
-  # 用 spec_code 替代 memory 来指定规格
-  spec_code = "cdb.pg.ts1.2g" # 1C2G
 
   tags = var.tags
 }
