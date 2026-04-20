@@ -112,6 +112,7 @@ jobs:
             -var="secret_key=${{ secrets.TENCENTCLOUD_SECRET_KEY }}" \
             -var="tcr_namespace=${{ secrets.TCR_NAMESPACE }}" \
             -var="db_password=${{ secrets.DB_PASSWORD }}" \
+            -var="redis_password=${{ secrets.REDIS_PASSWORD }}" \
             -var="session_secret=${{ secrets.SESSION_SECRET }}" \
             -out=tfplan
 

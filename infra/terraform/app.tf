@@ -2,14 +2,15 @@
 # TKE 标准集群（Serverless 模式，无需购买节点）
 # ============================================================
 resource "tencentcloud_kubernetes_cluster" "main" {
-  cluster_name                    = "new-api-cluster"
-  cluster_version                 = var.cluster_version
-  cluster_cidr                    = "172.16.0.0/22"
-  cluster_os                      = "ubuntu18.04.1x86_64"
-  vpc_id                          = tencentcloud_vpc.main.id
-  cluster_deploy_type             = "MANAGED_CLUSTER"
-  cluster_internet                = true
-  cluster_internet_security_group = tencentcloud_security_group.app.id
+  cluster_name        = "new-api-cluster"
+  cluster_version     = var.cluster_version
+  cluster_cidr        = "172.16.0.0/22"
+  cluster_os          = "ubuntu18.04.1x86_64"
+  vpc_id              = tencentcloud_vpc.main.id
+  cluster_deploy_type = "MANAGED_CLUSTER"
+
+  # 不开公网（开公网需要 worker_config），通过 CLB 暴露服务
+  cluster_internet = false
 
   cluster_desc = "new-api production cluster (serverless)"
 
@@ -61,7 +62,7 @@ resource "kubernetes_secret_v1" "app_config" {
 
   data = {
     SQL_DSN           = "postgresql://root:${var.db_password}@${tencentcloud_postgresql_instance.main.private_access_ip}:${tencentcloud_postgresql_instance.main.private_access_port}/new_api?sslmode=require"
-    REDIS_CONN_STRING = "redis://${tencentcloud_redis_instance.main.ip}:${tencentcloud_redis_instance.main.port}"
+    REDIS_CONN_STRING = "redis://:${var.redis_password}@${tencentcloud_redis_instance.main.ip}:${tencentcloud_redis_instance.main.port}"
     SESSION_SECRET    = var.session_secret
   }
 }

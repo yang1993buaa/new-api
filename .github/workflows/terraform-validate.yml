@@ -137,6 +137,7 @@ jobs:
             -var="secret_key=${TF_VAR_secret_key:-placeholder-key}" \
             -var="tcr_namespace=${TF_VAR_tcr_namespace:-placeholder}" \
             -var="db_password=${TF_VAR_db_password:-PlanCheck_123!}" \
+            -var="redis_password=${TF_VAR_redis_password:-PlanCheck_123!}" \
             -var="session_secret=${TF_VAR_session_secret:-plancheckplancheckplancheck0123}" \
             2>&1 | tee plan_output.txt
         continue-on-error: true
@@ -145,6 +146,7 @@ jobs:
           TF_VAR_secret_key: ${{ secrets.TENCENTCLOUD_SECRET_KEY }}
           TF_VAR_tcr_namespace: ${{ secrets.TCR_NAMESPACE }}
           TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+          TF_VAR_redis_password: ${{ secrets.REDIS_PASSWORD }}
           TF_VAR_session_secret: ${{ secrets.SESSION_SECRET }}
 
       # 在 PR 上评论 plan 结果（截断过长输出）

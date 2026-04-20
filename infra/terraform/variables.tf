@@ -72,6 +72,12 @@ variable "redis_mem_size" {
   default     = 256
 }
 
+variable "redis_password" {
+  description = "Redis 密码"
+  type        = string
+  sensitive   = true
+}
+
 # ============================================================
 # 应用配置
 # ============================================================
