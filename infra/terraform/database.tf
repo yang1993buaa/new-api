@@ -7,14 +7,21 @@ resource "tencentcloud_postgresql_instance" "main" {
   charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.main.id
   subnet_id         = tencentcloud_subnet.db.id
-  engine_version    = "15.14"
+  db_major_version  = "15"
+  engine_version    = "15.1"
   root_password     = var.db_password
-  storage           = var.db_storage
-  memory            = 2 # 2GB
   charset           = "UTF8"
+  cpu               = 1
+  memory            = 2 # 2GB
+  storage           = var.db_storage
   security_groups   = [tencentcloud_security_group.db.id]
 
   tags = var.tags
+
+  timeouts {
+    create = "30m"
+    update = "30m"
+  }
 }
 
 # 注意：tencentcloud_postgresql_database 资源不受 Provider 支持
