@@ -51,12 +51,6 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "db_memory" {
-  description = "PostgreSQL 实例内存 (GB)"
-  type        = number
-  default     = 2
-}
-
 variable "db_storage" {
   description = "PostgreSQL 存储 (GB)"
   type        = number
@@ -99,7 +93,7 @@ variable "app_replicas" {
 variable "cluster_version" {
   description = "TKE 集群 K8s 版本"
   type        = string
-  default     = "1.32"
+  default     = "1.34"
 }
 
 # ============================================================
