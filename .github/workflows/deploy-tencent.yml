@@ -19,8 +19,8 @@ permissions:
   id-token: write
 
 env:
-  TCR_REGISTRY: ccr.ccs.tencentyun.com
-  TCR_NAMESPACE: ${{ secrets.TCR_NAMESPACE }}
+  TCR_REGISTRY: xiongfei-test.tencentcloudcr.com
+  TCR_NAMESPACE: burton-namespace
   TF_WORKING_DIR: infra/terraform
 
 jobs:
