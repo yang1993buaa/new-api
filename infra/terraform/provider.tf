@@ -4,23 +4,23 @@ provider "tencentcloud" {
   secret_key = var.secret_key
 }
 
-# Kubernetes Provider — 连接到 TKE 集群
-# 首次部署需分步：先 terraform apply -target=tencentcloud_kubernetes_cluster.main
-# 集群创建完成后再 terraform apply 部署 K8s 资源
+# Kubernetes Provider — 通过独立的 cluster_endpoint 资源连接
+# 该资源在集群和节点池创建完成后才会开启公网访问
 provider "kubernetes" {
-  # TKE 集群的公网 API endpoint
   host = try(
-    tencentcloud_kubernetes_cluster.main.cluster_external_endpoint,
+    "https://${tencentcloud_kubernetes_cluster_endpoint.main.cluster_external_endpoint}",
     "https://placeholder.invalid"
   )
-  # 集群 CA 证书
   cluster_ca_certificate = try(
-    tencentcloud_kubernetes_cluster.main.certification_authority,
+    tencentcloud_kubernetes_cluster_endpoint.main.certification_authority,
     ""
   )
-  # 使用 token 方式认证（TKE 支持）
-  token = try(
-    tencentcloud_kubernetes_cluster.main.password,
+  username = try(
+    tencentcloud_kubernetes_cluster_endpoint.main.user_name,
+    ""
+  )
+  password = try(
+    tencentcloud_kubernetes_cluster_endpoint.main.password,
     ""
   )
 }

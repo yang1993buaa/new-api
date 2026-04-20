@@ -9,12 +9,24 @@ resource "tencentcloud_kubernetes_cluster" "main" {
   vpc_id              = tencentcloud_vpc.main.id
   cluster_deploy_type = "MANAGED_CLUSTER"
 
-  # 不开公网（开公网需要 worker_config），通过 CLB 暴露服务
+  # 不在集群创建时开公网（需 worker_config）
+  # 公网访问由独立资源 tencentcloud_kubernetes_cluster_endpoint 开启
   cluster_internet = false
 
   cluster_desc = "new-api production cluster (serverless)"
 
   tags = var.tags
+}
+
+# ============================================================
+# TKE 集群访问端口 — 独立资源开启公网访问（不需要 worker_config）
+# ============================================================
+resource "tencentcloud_kubernetes_cluster_endpoint" "main" {
+  cluster_id                      = tencentcloud_kubernetes_cluster.main.id
+  cluster_internet                = true
+  cluster_internet_security_group = tencentcloud_security_group.app.id
+
+  depends_on = [tencentcloud_kubernetes_serverless_node_pool.app]
 }
 
 # ============================================================
