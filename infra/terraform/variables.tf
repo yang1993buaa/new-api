@@ -97,9 +97,9 @@ variable "app_replicas" {
 # TKE Serverless
 # ============================================================
 variable "cluster_version" {
-  description = "TKE Serverless 集群 K8s 版本"
+  description = "TKE 集群 K8s 版本"
   type        = string
-  default     = "1.28.3"
+  default     = "1.30"
 }
 
 # ============================================================

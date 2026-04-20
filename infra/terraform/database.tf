@@ -7,7 +7,7 @@ resource "tencentcloud_postgresql_instance" "main" {
   charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.main.id
   subnet_id         = tencentcloud_subnet.db.id
-  engine_version    = "15.0"
+  engine_version    = "15.1"
   root_password     = var.db_password
   storage           = var.db_storage
   memory            = var.db_memory
@@ -32,7 +32,7 @@ resource "tencentcloud_postgresql_instance" "main" {
 resource "tencentcloud_redis_instance" "main" {
   name              = "new-api-redis"
   availability_zone = var.availability_zone
-  type_id           = 2 # Redis 主从版
+  type_id           = 8 # Redis 5.0 标准版（支持按量付费）
   mem_size          = var.redis_mem_size
   password          = var.redis_password
   vpc_id            = tencentcloud_vpc.main.id
