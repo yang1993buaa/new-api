@@ -93,7 +93,7 @@ variable "app_replicas" {
 variable "cluster_version" {
   description = "TKE 集群 K8s 版本"
   type        = string
-  default     = "1.34"
+  default     = "1.32.2"
 }
 
 # ============================================================
