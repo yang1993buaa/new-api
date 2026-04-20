@@ -25,7 +25,7 @@ variable "region" {
 variable "availability_zone" {
   description = "可用区"
   type        = string
-  default     = "ap-guangzhou-6"
+  default     = "ap-guangzhou-3"
 }
 
 # ============================================================

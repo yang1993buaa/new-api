@@ -8,11 +8,11 @@ provider "tencentcloud" {
 # 该资源在集群和节点池创建完成后才会开启公网访问
 provider "kubernetes" {
   host = try(
-    "https://${tencentcloud_kubernetes_cluster_endpoint.main.cluster_external_endpoint}",
+    tencentcloud_kubernetes_cluster_endpoint.main.cluster_external_endpoint,
     "https://placeholder.invalid"
   )
   cluster_ca_certificate = try(
-    tencentcloud_kubernetes_cluster_endpoint.main.certification_authority,
+    base64decode(tencentcloud_kubernetes_cluster_endpoint.main.certification_authority),
     ""
   )
   username = try(
