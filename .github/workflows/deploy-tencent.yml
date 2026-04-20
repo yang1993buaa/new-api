@@ -59,8 +59,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.TCR_REGISTRY }}
-          username: ${{ secrets.TENCENTCLOUD_SECRET_ID }}
-          password: ${{ secrets.TENCENTCLOUD_SECRET_KEY }}
+          username: ${{ secrets.TCR_USERNAME }}
+          password: ${{ secrets.TCR_PASSWORD }}
 
       - name: Build & push
         uses: docker/build-push-action@v6
