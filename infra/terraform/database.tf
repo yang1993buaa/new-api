@@ -7,7 +7,7 @@ resource "tencentcloud_postgresql_instance" "main" {
   charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.main.id
   subnet_id         = tencentcloud_subnet.db.id
-  engine_version    = "15.1"
+  engine_version    = "15.14"
   root_password     = var.db_password
   storage           = var.db_storage
   memory            = var.db_memory
