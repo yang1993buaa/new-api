@@ -103,10 +103,11 @@ jobs:
             -backend-config="secret_id=${{ secrets.TENCENTCLOUD_SECRET_ID }}" \
             -backend-config="secret_key=${{ secrets.TENCENTCLOUD_SECRET_KEY }}"
 
-      - name: Terraform Plan
-        id: plan
+      - name: Terraform Apply - Phase 1 (Tencent Cloud infrastructure only)
         run: |
-          terraform plan -no-color -input=false \
+          # 第一阶段：只创建腾讯云基础资源，不包括 K8s Provider 管理的资源
+          # 因为 K8s Provider 在集群创建之前无法配置
+          terraform apply -auto-approve -input=false \
             -var="app_image_tag=${{ needs.build.outputs.version }}" \
             -var="secret_id=${{ secrets.TENCENTCLOUD_SECRET_ID }}" \
             -var="secret_key=${{ secrets.TENCENTCLOUD_SECRET_KEY }}" \
@@ -114,10 +115,30 @@ jobs:
             -var="db_password=${{ secrets.DB_PASSWORD }}" \
             -var="redis_password=${{ secrets.REDIS_PASSWORD }}" \
             -var="session_secret=${{ secrets.SESSION_SECRET }}" \
-            -out=tfplan
+            -target=tencentcloud_vpc.main \
+            -target=tencentcloud_subnet.app \
+            -target=tencentcloud_subnet.db \
+            -target=tencentcloud_security_group.app \
+            -target=tencentcloud_security_group.db \
+            -target=tencentcloud_security_group_rule_set.app_rules \
+            -target=tencentcloud_security_group_rule_set.db_rules \
+            -target=tencentcloud_postgresql_instance.main \
+            -target=tencentcloud_redis_instance.main \
+            -target=tencentcloud_kubernetes_cluster.main \
+            -target=tencentcloud_kubernetes_serverless_node_pool.app \
+            -target=tencentcloud_kubernetes_cluster_endpoint.main
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false tfplan
+      - name: Terraform Apply - Phase 2 (K8s resources)
+        run: |
+          # 第二阶段：在集群就绪后部署 K8s 资源（Namespace, Secret, Deployment, Service）
+          terraform apply -auto-approve -input=false \
+            -var="app_image_tag=${{ needs.build.outputs.version }}" \
+            -var="secret_id=${{ secrets.TENCENTCLOUD_SECRET_ID }}" \
+            -var="secret_key=${{ secrets.TENCENTCLOUD_SECRET_KEY }}" \
+            -var="tcr_namespace=${{ secrets.TCR_NAMESPACE }}" \
+            -var="db_password=${{ secrets.DB_PASSWORD }}" \
+            -var="redis_password=${{ secrets.REDIS_PASSWORD }}" \
+            -var="session_secret=${{ secrets.SESSION_SECRET }}"
 
       - name: Verify deployment
         run: |
