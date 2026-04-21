@@ -9,6 +9,7 @@ resource "tencentcloud_postgresql_instance" "main" {
   subnet_id         = tencentcloud_subnet.db.id
   db_major_version  = "15"
   engine_version    = "15.1"
+  db_kernel_version = "v15.14_r1.26"
   root_password     = var.db_password
   charset           = "UTF8"
   cpu               = 1
