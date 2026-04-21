@@ -22,9 +22,10 @@ resource "tencentcloud_kubernetes_cluster" "main" {
 # TKE 集群访问端口 — 独立资源开启公网访问（不需要 worker_config）
 # ============================================================
 resource "tencentcloud_kubernetes_cluster_endpoint" "main" {
-  cluster_id                      = tencentcloud_kubernetes_cluster.main.id
-  cluster_internet                = true
-  cluster_internet_security_group = tencentcloud_security_group.app.id
+  cluster_id                                 = tencentcloud_kubernetes_cluster.main.id
+  cluster_internet                           = true
+  cluster_internet_security_group            = tencentcloud_security_group.app.id
+  managed_cluster_internet_security_policies = ["0.0.0.0/0"]
 
   depends_on = [tencentcloud_kubernetes_serverless_node_pool.app]
 }
