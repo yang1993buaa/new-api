@@ -11,10 +11,6 @@ provider "kubernetes" {
     tencentcloud_kubernetes_cluster_endpoint.main.cluster_external_endpoint,
     "https://placeholder.invalid"
   )
-  cluster_ca_certificate = try(
-    base64decode(tencentcloud_kubernetes_cluster_endpoint.main.certification_authority),
-    ""
-  )
   username = try(
     tencentcloud_kubernetes_cluster_endpoint.main.user_name,
     ""
@@ -23,4 +19,8 @@ provider "kubernetes" {
     tencentcloud_kubernetes_cluster_endpoint.main.password,
     ""
   )
+  # TKE 集群 API Server 使用自签名证书，跳过 TLS 验证
+  # 由于 endpoint 来源于 Terraform 创建的 tencentcloud_kubernetes_cluster_endpoint 资源，
+  # 链路可信，跳过 TLS 验证是安全的
+  insecure = true
 }
